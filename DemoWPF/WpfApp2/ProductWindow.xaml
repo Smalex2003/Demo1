@@ -41,7 +41,24 @@
             </DataGrid.Columns>
         </DataGrid>
         <Label Content="" Name="FIOLb" FontFamily="Comic Sans MS" FontSize="14" HorizontalAlignment="Left" Margin="781,10,0,0" VerticalAlignment="Top"/>
-        <Button Content="Выйти" Name="ExitBtn" Background="#498c51" FontFamily="Comic Sans MS" FontSize="18" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Row="3" VerticalAlignment="Center" Width="154" Click="AutorizationBtn_Click"/>
+        <Button Content="Выйти" Name="ExitBtn" Background="#498c51" FontFamily="Comic Sans MS" FontSize="18" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Row="3" VerticalAlignment="Center" Width="154" Click="AutorizationBtn_Click" RenderTransformOrigin="0.5,0.5">
+            <Button.LayoutTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform X="-2"/>
+                </TransformGroup>
+            </Button.LayoutTransform>
+            <Button.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform X="0"/>
+                </TransformGroup>
+            </Button.RenderTransform>
+        </Button>
         <Label Content="Выберите скидку:" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="Comic Sans MS" FontSize="14" Height="28" Width="289" Grid.Row="1"   />
         <ComboBox Name="SelectCmb" Width="120" Height="20" Margin="144,13,736,5" Grid.Row="1" SelectionChanged="ComboBox_SelectionChanged">
             <ComboBoxItem Content=""></ComboBoxItem>
@@ -49,5 +66,7 @@
             <ComboBoxItem Content="10-14.99%"></ComboBoxItem>
             <ComboBoxItem Content="15% и более"></ComboBoxItem>
         </ComboBox>
+        <Label Content="Поиск:" HorizontalAlignment="Left" Margin="344,0,0,0" Grid.Row="1" VerticalAlignment="Center"/>
+        <TextBox TextChanged="SearchTb_TextChanged_1" HorizontalAlignment="Left" Name="SearchTb" Margin="391,0,0,0" Grid.Row="1" TextWrapping="Wrap" Text="" VerticalAlignment="Center" Width="147" Height="21"/>
     </Grid>
 </Window>

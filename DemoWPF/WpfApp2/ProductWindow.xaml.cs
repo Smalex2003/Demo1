@@ -19,19 +19,24 @@ namespace WpfApp2
     /// </summary>
     public partial class ProductWindow : Window
     {
+        public List<Product> thisproducts = new List<Product>();
         
+
         public ProductWindow(User user)
         {
             InitializeComponent();
             Demo29Entities db = new Demo29Entities();
             ProductDG.ItemsSource = db.Product.ToList();
             FIOLb.Content = user.UserSurname + " " + user.UserName + " " + user.UserPatronymic;
-           
+            thisproducts = db.Product.ToList();
+            
+
         }
+
 
         private void AutorizationBtn_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow wind=new MainWindow();
+            MainWindow wind = new MainWindow();
             wind.Show();
             this.Close();
         }
@@ -40,22 +45,54 @@ namespace WpfApp2
         {
             Demo29Entities db = new Demo29Entities();
             List<Product> products = db.Product.ToList();
-            
+
             if (SelectCmb.SelectedIndex == 1)
             {
                 products = products.Where(prod => prod.ProductDiscountAmount < 10).ToList();
             }
             if (SelectCmb.SelectedIndex == 2)
             {
-                products = products.Where(prod => prod.ProductDiscountAmount >= 10&& prod.ProductDiscountAmount<15).ToList();
+                products = products.Where(prod => prod.ProductDiscountAmount >= 10 && prod.ProductDiscountAmount < 15).ToList();
             }
             if (SelectCmb.SelectedIndex == 3)
             {
-                products = products.Where(prod => prod.ProductDiscountAmount >= 15 ).ToList();
+                products = products.Where(prod => prod.ProductDiscountAmount >= 15).ToList();
             }
-            ProductDG.ItemsSource=products;
+            thisproducts = products;
+            ProductDG.ItemsSource = thisproducts;
 
 
+        }
+        private void SearchTb_TextChanged(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void SearchTb_TextChanged_1(object sender, TextChangedEventArgs e)
+        {
+            Demo29Entities db = new Demo29Entities();
+            int check = 0;
+            List<Product> thisproducts1 = new List<Product>();
+            foreach (Product pr in thisproducts)
+            {
+                for (int i = 0; i < SearchTb.Text.Length; i++)
+                {
+                    if (pr.ProductName[i] == SearchTb.Text[i])
+                    {
+                        check++;
+                        
+                    }
+                }
+                if (check == SearchTb.Text.Length)
+                {
+                    
+                    thisproducts1.Add(pr);
+                    
+                }
+                check = 0;
+
+            }
+            ProductDG.ItemsSource = thisproducts1;
         }
     }
 }
