@@ -1,98 +1,96 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
-namespace WpfApp2
+namespace ProductDEmo
 {
     /// <summary>
     /// Логика взаимодействия для ProductWindow.xaml
     /// </summary>
     public partial class ProductWindow : Window
     {
-        public List<Product> thisproducts = new List<Product>();
-        
-
-        public ProductWindow(User user)
+      
+        public static List<Product> productSortedList = MainWindow.db.Product.ToList();
+        public ProductWindow()
         {
             InitializeComponent();
-            Demo29Entities db = new Demo29Entities();
-            ProductDG.ItemsSource = db.Product.ToList();
-            FIOLb.Content = user.UserSurname + " " + user.UserName + " " + user.UserPatronymic;
-            thisproducts = db.Product.ToList();
-            
-
+          
+        }
+        private void BackClick(object sender, RoutedEventArgs e)
+        {
+            this.Hide();
+            MainWindow.mainWindow.Show();
         }
 
-
-        private void AutorizationBtn_Click(object sender, RoutedEventArgs e)
+        private void TextChange(object sender, TextChangedEventArgs e)
         {
-            MainWindow wind = new MainWindow();
-            wind.Show();
-            this.Close();
+            AddAllFilters();
         }
-
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        public void AddAllFilters()
         {
-            Demo29Entities db = new Demo29Entities();
-            List<Product> products = db.Product.ToList();
+            productSortedList = productSortedList.Where(prod => prod.ProductName.StartsWith(FindTextBox.Text)).ToList();
 
-            if (SelectCmb.SelectedIndex == 1)
+            if (SortComboBox.SelectedIndex == 0)
             {
-                products = products.Where(prod => prod.ProductDiscountAmount < 10).ToList();
+                productSortedList = productSortedList.OrderByDescending(prod => prod.ProductCost).ToList();
             }
-            if (SelectCmb.SelectedIndex == 2)
+            if (SortComboBox.SelectedIndex == 1)
             {
-                products = products.Where(prod => prod.ProductDiscountAmount >= 10 && prod.ProductDiscountAmount < 15).ToList();
+                productSortedList = productSortedList.OrderBy(prod => prod.ProductCost).ToList();
             }
-            if (SelectCmb.SelectedIndex == 3)
+
+            if (SortByDiscount.SelectedIndex == 1)
             {
-                products = products.Where(prod => prod.ProductDiscountAmount >= 15).ToList();
+                productSortedList = productSortedList.Where(prod => prod.ProductDiscountAmount > 0 && prod.ProductDiscountAmount < 10).ToList();
             }
-            thisproducts = products;
-            ProductDG.ItemsSource = thisproducts;
-
-
-        }
-        private void SearchTb_TextChanged(object sender, EventArgs e)
-        {
-           
-        }
-
-        private void SearchTb_TextChanged_1(object sender, TextChangedEventArgs e)
-        {
-            Demo29Entities db = new Demo29Entities();
-            int check = 0;
-            List<Product> thisproducts1 = new List<Product>();
-            foreach (Product pr in thisproducts)
+            if (SortByDiscount.SelectedIndex == 2)
             {
-                for (int i = 0; i < SearchTb.Text.Length; i++)
+                productSortedList = productSortedList.Where(prod => prod.ProductDiscountAmount > 9.99 && prod.ProductDiscountAmount < 15).ToList();
+            }
+            if (SortByDiscount.SelectedIndex == 3)
+            {
+                productSortedList = productSortedList.Where(prod => prod.ProductDiscountAmount > 14.99).ToList();
+            }
+            ProductListView.ItemsSource = productSortedList;
+            InfoTextBox.Text = "Количество: " + productSortedList.Count + "/" + MainWindow.db.Product.ToList().Count;
+            productSortedList = MainWindow.db.Product.ToList();
+            ChangeColorIfDiscountLargerThan15();
+        }
+        private void ChangeSelection(object sender, SelectionChangedEventArgs e)
+        {
+            AddAllFilters();
+        }
+
+        private void ChangeSelectionOfDiscountComboBox(object sender, SelectionChangedEventArgs e)
+        {
+            AddAllFilters();
+        }
+        public void ChangeColorIfDiscountLargerThan15()
+        {
+            for (int i = 0; i < ProductListView.Items.Count; i++)
+            {
+                if ((ProductListView.Items[i] as Product).ProductDiscountAmount > 15)
                 {
-                    if (pr.ProductName[i] == SearchTb.Text[i])
+                    var container = ProductListView.ItemContainerGenerator.ContainerFromIndex(i) as ListViewItem;
+                    if (container != null)
                     {
-                        check++;
-                        
+                        int b = VisualTreeHelper.GetChildrenCount(container);
+                        for (int j = 0; j < VisualTreeHelper.GetChildrenCount(container); j++)
+                        {
+                            Grid grid = (Grid)VisualTreeHelper.GetChild(((VisualTreeHelper.GetChild(container, j) as Border).Child as ContentPresenter), 0);
+                            grid.Background = new SolidColorBrush(Color.FromRgb(127, 255, 0));
+                        }
                     }
                 }
-                if (check == SearchTb.Text.Length)
-                {
-                    
-                    thisproducts1.Add(pr);
-                    
-                }
-                check = 0;
-
             }
-            ProductDG.ItemsSource = thisproducts1;
+        }
+        private void ClickDOubleCheck(object sender, MouseButtonEventArgs e)
+        {
+            ChangeColorIfDiscountLargerThan15();
         }
     }
 }

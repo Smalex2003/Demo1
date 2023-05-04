@@ -1,68 +1,134 @@
-﻿using System;
+﻿using System.IO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+using Microsoft.Win32;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-
-namespace WpfApp2
+namespace ProductDEmo
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static Demo29Entities db = new Demo29Entities();
+        public static MainWindow mainWindow;
+        public static ProductWindow productWindow = new ProductWindow();
+        public static CaptchaWindow captchaWindow = new CaptchaWindow();
+        public static AdminWindow adminWindow = new AdminWindow();
+        public static ChangeProductWindow changeProductWindow = new ChangeProductWindow();
+        public static AddProductWindow addProductWindow = new AddProductWindow();
+    
+        public static User CurrentUser;
+        public static int NumbersOfIncorrectAuthorizations = 0;
+        public static int CaptchaNumbers = 00000;
         public MainWindow()
         {
             InitializeComponent();
+            mainWindow = this;
+            PathInitialize();
         }
-
-        private void AutorizationBtn_Click(object sender, RoutedEventArgs e)
+        public void GenerateCaptcha()
         {
-            Demo29Entities db = new Demo29Entities();
-            
-            foreach(User user1 in db.User)
+            Random rnd = new Random();
+            CaptchaNumbers = rnd.Next(10000, 99999);
+        }
+        public void PathInitialize()
+        {
+            string vivod = "";
+            foreach (var Product in db.Product)
             {
-                if(user1.UserPassword==PassTb.Text && user1.UserLogin == LoginTb.Text)
-                {
-                   
-                    MessageBox.Show("Вы успешно авторизовались!");
-                    if (user1.RoleID == 2)
+               if (Product.ProductPhoto != null)
+               {
+                   if (Product.ProductPhoto.Contains("C:")){
+                       Product.ProductPhoto =  Product.ProductPhoto;
+                  }
+                   else
                     {
-                        AdminProductWindow wind1 = new AdminProductWindow(user1);
-                        wind1.Show();
-                        this.Close();
-                        return;
+                       Product.ProductPhoto = "Resources/" + Product.ProductPhoto;
                     }
-                    else
-                    {
-                        ProductWindow wind = new ProductWindow(user1);
-                        wind.Show();
-                        this.Close();
-                        return;
-                    }
-                    
                 }
-               
-            }
-            MessageBox.Show("Неверные логин или пароль!");
+               vivod += Product.ProductPhoto + "\n";
+           }
+           
         }
 
-        private void AutorizationBtn_Copy_Click(object sender, RoutedEventArgs e)
+        private void ExitClick(object sender, RoutedEventArgs e)
         {
-            User user = new User();
-            user.UserName = "Гость";
-            ProductWindow wind = new ProductWindow(user);
-            wind.Show();
+            Application.Current.Shutdown();
+        }
+        public void LoadAdminWindow()
+        {
+            this.Hide();
+            adminWindow.AdminProductGrid.ItemsSource = db.Product.ToList();
+            adminWindow.Show();
+        }
 
+        private void AuthorizationClick(object sender, RoutedEventArgs e)
+        {
+            if (NumbersOfIncorrectAuthorizations < 5)
+            {
+                User user = db.User.ToList()
+                    .Where(us => us.UserLogin == LoginTextBox.Text && us.UserPassword == PasswordTextBox.Text)
+                    .FirstOrDefault();
+                if (user != null)
+                {
+                   // MessageBox.Show("Ваша роль: " + user.Role.RoleName);
+                    if (user.Role.RoleName == "Администратор")
+                    {
+                        LoadAdminWindow();
+                        CurrentUser = user;
+                    }
+                    else if(user.Role.RoleName == "Клиент")
+                    {
+                        productWindow.ProductListView.ItemsSource = db.Product.ToList();
+                        mainWindow.Hide();
+                        productWindow.Show();
+                        productWindow.InfoTextBox.Text = "Количество: " + MainWindow.db.Product.ToList().Count + "/" + MainWindow.db.Product.ToList().Count;
+                        productWindow.ChangeColorIfDiscountLargerThan15();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Неверные данные для входа");
+                    NumbersOfIncorrectAuthorizations++;
+
+                    TextBoxClear();
+                    if (NumbersOfIncorrectAuthorizations >= 5)
+                    {
+                        captchaWindow.Show();
+                        GenerateCaptcha();
+                        captchaWindow.CaptchaTextBlock.Text = CaptchaNumbers.ToString();
+                        MessageBox.Show("Вы потратили на авторизацию слишком много попыток");
+                    }
+                }
+            }
+            else
+            {
+                captchaWindow.Show();
+                GenerateCaptcha();
+                captchaWindow.CaptchaTextBlock.Text = CaptchaNumbers.ToString();
+                MessageBox.Show("Сначала пройдите капчу!");
+            }
+        }
+
+        public void TextBoxClear()
+        {
+            PasswordTextBox.Text = "";
+            LoginTextBox.Text = "";
+        }
+
+        private void ProductsClick(object sender, RoutedEventArgs e)
+        {
+            productWindow.ProductListView.ItemsSource = db.Product.ToList();
+            mainWindow.Hide();
+            productWindow.Show();
+            productWindow.InfoTextBox.Text = "Количество: " + MainWindow.db.Product.ToList().Count + "/" + MainWindow.db.Product.ToList().Count;
+            productWindow.ChangeColorIfDiscountLargerThan15();
         }
     }
 }

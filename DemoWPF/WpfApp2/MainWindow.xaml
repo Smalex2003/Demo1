@@ -1,25 +1,36 @@
-﻿<Window x:Class="WpfApp2.MainWindow"
+﻿<Window x:Class="Demo1.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WpfApp2"
+        xmlns:local="clr-namespace:ProductDEmo"
         mc:Ignorable="d"
-        Title="Окно авторизации" Height="400" Width="500" Icon="Resource/icon.ico">
+        Title="Авторизация" Height="445" Width="644" WindowStartupLocation="CenterScreen" Icon="Resources/Icon.ico">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="1*"></RowDefinition>
-            <RowDefinition Height="4*"></RowDefinition>
-        </Grid.RowDefinitions>
-        <Border Grid.Row="0" BorderBrush="Black" Background="#76e383" BorderThickness="1">
-            <Image Source="/Resource/logo.png" HorizontalAlignment="Left" Height="60" Width="60" VerticalAlignment="Top" Margin="-1,9,0,0"></Image>
-        </Border>
-        <Label Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Добро пожаловать,авторизуйтесь!" FontFamily="Comic Sans MS" FontSize="22"   />
-        <Label Content="Введите логин:" HorizontalAlignment="Left"  FontFamily="Comic Sans MS" FontSize="18" Margin="65,41,0,0" Grid.Row="1" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Name="LoginTb" Margin="209,52,0,0" Grid.Row="1" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="170" Height="20"/>
-        <TextBox HorizontalAlignment="Left" x:Name="PassTb" Margin="209,85,0,0" Grid.Row="1" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="170" Height="20"/>
-        <Label Content="Введите пароль:" HorizontalAlignment="Left"  FontFamily="Comic Sans MS" FontSize="18" Margin="51,76,0,0" Grid.Row="1" VerticalAlignment="Top"/>
-        <Button Content="Авторизоваться" Name="AutorizationBtn" Background="#498c51" FontFamily="Comic Sans MS" FontSize="18" HorizontalAlignment="Center" Margin="0,125,0,0" Grid.Row="1" VerticalAlignment="Top" Width="154" Click="AutorizationBtn_Click"/>
-        <Button Content="Посмотреть товары" x:Name="AutorizationBtn_Copy" Background="#498c51" FontFamily="Comic Sans MS" FontSize="18" HorizontalAlignment="Center" Margin="0,177,0,0" Grid.Row="1" VerticalAlignment="Top" Width="192" Click="AutorizationBtn_Copy_Click"/>
+
+
+        <Border  Background="#468C51" Margin="0,0,0,346"></Border>
+        <Image  Margin="5,8,0,346" HorizontalAlignment="Left" Width="60" Source="Resources/logo.png" RenderTransformOrigin="0.342,0.27"></Image>
+        <TextBlock Text="Добро пожаловать, здесь вы можете авторизоваться"  HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Comic Sans MS" FontSize="20" Margin="86,24,0,0" ></TextBlock>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,114,0,0">
+            <TextBlock  FontFamily="Comic Sans MS" FontSize="16" Text="Введите логин"></TextBlock>
+            <TextBox FontFamily="Comic Sans MS" FontSize="16" Name="LoginTextBox" Width="200"  ></TextBox>
+            <TextBlock FontFamily="Comic Sans MS" FontSize="16" Text="Введите пароль"></TextBlock>
+            <TextBox FontFamily="Comic Sans MS" FontSize="16" Name="PasswordTextBox" Width="200"  ></TextBox>
+        </StackPanel>
+        <Button Background="#468C51" FontFamily="Comic Sans MS" FontSize="16" Content="Авторизоваться"  Margin="230,227,230,143" Click="AuthorizationClick"  >
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="20"></Setter>
+                </Style>
+            </Button.Resources>
+        </Button>
+        <Button Background="#468C51" Content="Товары" Width="126" HorizontalAlignment="Center" FontFamily="Comic Sans MS" FontSize="16"  Margin="0,296,0,78" Click="ProductsClick">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="20"></Setter>
+                </Style>
+            </Button.Resources>
+        </Button>
     </Grid>
 </Window>
