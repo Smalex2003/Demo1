@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace ProductDEmo
+namespace WpfApp2
 {
     /// <summary>
     /// Логика взаимодействия для CaptchaWindow.xaml
@@ -23,7 +23,11 @@ namespace ProductDEmo
         {
             InitializeComponent();
         }
-
+        /// <summary>
+        /// Функция проверки введенных значений капчи
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ClickCaptchaCheck(object sender, RoutedEventArgs e)
         {
             if(TextBoxNumbers.Text == MainWindow.CaptchaNumbers.ToString())

@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 
-namespace ProductDEmo
+namespace WpfApp2
 {
     public partial class AddProductWindow : Window
     {
@@ -14,7 +14,11 @@ namespace ProductDEmo
         {
             InitializeComponent();
         }
-
+        /// <summary>
+        /// Функция для кнопки добавления продукта
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AddProductClick(object sender, RoutedEventArgs e)
         {
             if (CategoryComboBox.SelectedItem == null || ManufacturerComboBox.SelectedItem == null ||
@@ -53,6 +57,11 @@ namespace ProductDEmo
             MessageBox.Show("Вы успешно добавили новый продукт");
         }
 
+        /// <summary>
+        /// Функция для кнопки выбора фото продукта
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ChoosePhotoClick(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
@@ -63,7 +72,11 @@ namespace ProductDEmo
                 
             }
         }
-
+        /// <summary>
+        /// Функция закрытия окна
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Close(object sender, CancelEventArgs e)
         {
             e.Cancel = true;

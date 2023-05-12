@@ -8,7 +8,7 @@ using Microsoft.Win32;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-namespace ProductDEmo
+namespace WpfApp2
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
@@ -22,7 +22,7 @@ namespace ProductDEmo
         public static AdminWindow adminWindow = new AdminWindow();
         public static ChangeProductWindow changeProductWindow = new ChangeProductWindow();
         public static AddProductWindow addProductWindow = new AddProductWindow();
-    
+        public static OrderWindow orderWindow = new OrderWindow();
         public static User CurrentUser;
         public static int NumbersOfIncorrectAuthorizations = 0;
         public static int CaptchaNumbers = 00000;
@@ -32,11 +32,17 @@ namespace ProductDEmo
             mainWindow = this;
             PathInitialize();
         }
+        /// <summary>
+        /// Функция генерации капчи
+        /// </summary>
         public void GenerateCaptcha()
         {
             Random rnd = new Random();
             CaptchaNumbers = rnd.Next(10000, 99999);
         }
+        /// <summary>
+        /// Функция инициализации пути для отображения фото
+        /// </summary>
         public void PathInitialize()
         {
             string vivod = "";
@@ -56,18 +62,29 @@ namespace ProductDEmo
            }
            
         }
-
+        /// <summary>
+        /// Функция копки закрытия
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ExitClick(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
         }
+        /// <summary>
+        /// Функция открытия окна для администратора
+        /// </summary>
         public void LoadAdminWindow()
         {
             this.Hide();
             adminWindow.AdminProductGrid.ItemsSource = db.Product.ToList();
             adminWindow.Show();
         }
-
+        /// <summary>
+        /// Функция нажатия кнопки авторизации
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AuthorizationClick(object sender, RoutedEventArgs e)
         {
             if (NumbersOfIncorrectAuthorizations < 5)
@@ -116,12 +133,19 @@ namespace ProductDEmo
             }
         }
 
+        /// <summary>
+        /// Функция для отчистки текстовых полей
+        /// </summary>
         public void TextBoxClear()
         {
             PasswordTextBox.Text = "";
             LoginTextBox.Text = "";
         }
-
+        /// <summary>
+        /// Функция загрузки продуктов
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ProductsClick(object sender, RoutedEventArgs e)
         {
             productWindow.ProductListView.ItemsSource = db.Product.ToList();

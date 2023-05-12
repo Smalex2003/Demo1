@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Demo1\DemoWPF\WpfApp2\App.xaml
-31366322025
+71056327428
 2-1957146511
-222026758818
-18-834407467
-CaptchWind.xaml;MainWindow.xaml;ProductWindow.xaml;
+261642440839
+191819759911
+AddProductWindow.xaml;AdminWindow.xaml;CaptchaWindow.xaml;ChangeProductWindow.xaml;MainWindow.xaml;OrderWindow.xaml;ProductWindow.xaml;
 
-False
+True
 

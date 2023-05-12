@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace ProductDEmo
+namespace WpfApp2
 {
     /// <summary>
     /// Логика взаимодействия для AdminWindow.xaml
@@ -31,7 +31,11 @@ namespace ProductDEmo
         }
 
 
-
+        /// <summary>
+        /// Функция кнопки для загрузки данных о продукте
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ChangeProduct(object sender, SelectionChangedEventArgs e)
         {
             ChangeProductWindow.currentProduct = AdminProductGrid.SelectedItem as Product;
@@ -59,6 +63,11 @@ namespace ProductDEmo
             MainWindow.changeProductWindow.Show();
         }
 
+        /// <summary>
+        /// Функция для кнопки добавления продукта(загрузки данных в поля)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AddClick(object sender, RoutedEventArgs e)
         {
             MainWindow.addProductWindow.CategoryComboBox.ItemsSource = MainWindow.db.ProductCategory.ToList();

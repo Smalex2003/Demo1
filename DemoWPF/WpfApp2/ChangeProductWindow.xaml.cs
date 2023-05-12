@@ -15,7 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace ProductDEmo
+namespace WpfApp2
 {
     /// <summary>
     /// Логика взаимодействия для ChangeProductWindow.xaml
@@ -29,6 +29,11 @@ namespace ProductDEmo
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Функция выбора фото
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ChoosePhotoClick(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
@@ -39,6 +44,11 @@ namespace ProductDEmo
             }
         }
 
+        /// <summary>
+        /// Функция изменения данных продукта
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ChangeProductClick(object sender, RoutedEventArgs e)
         {
             try
@@ -69,12 +79,22 @@ namespace ProductDEmo
             }
         }
 
+        /// <summary>
+        /// Функция закрытия окна
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Close(object sender, System.ComponentModel.CancelEventArgs e)
         {
             e.Cancel = true;
             this.Hide();
         }
 
+        /// <summary>
+        /// Функция кнопки для удаления продукта
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DeleteProductClick(object sender, RoutedEventArgs e)
         {
             MainWindow.db.Product.Remove(currentProduct);

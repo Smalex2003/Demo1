@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
@@ -6,19 +7,20 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace ProductDEmo
+namespace WpfApp2
 {
     /// <summary>
     /// Логика взаимодействия для ProductWindow.xaml
     /// </summary>
     public partial class ProductWindow : Window
     {
-      
+        public static bool CurrentOrderExists = false;
+        public static Order currentOrder = new Order();
         public static List<Product> productSortedList = MainWindow.db.Product.ToList();
         public ProductWindow()
         {
             InitializeComponent();
-          
+
         }
         private void BackClick(object sender, RoutedEventArgs e)
         {
@@ -91,6 +93,99 @@ namespace ProductDEmo
         private void ClickDOubleCheck(object sender, MouseButtonEventArgs e)
         {
             ChangeColorIfDiscountLargerThan15();
+        }
+        private void CheckOrder(object sender, RoutedEventArgs e)
+        {
+            MainWindow.orderWindow.Show();
+        }
+        /// <summary>
+        /// Функция добавления заказа в базу данных
+        /// </summary>
+        public void AddCurrentOrderToDatabase()
+        {
+            currentOrder.OrderStatusID = 1;
+            currentOrder.PickupPointID = 1;
+            currentOrder.OrderCreateDate = DateTime.Now;
+            currentOrder.OrderDeliveryDate = DateTime.Now;
+            currentOrder.User = MainWindow.CurrentUser;
+            currentOrder.OrderGetCode = 555;
+            MainWindow.db.Order.Add(currentOrder);
+            MainWindow.db.SaveChanges();
+            CurrentOrderExists = true;
+        }
+        /// <summary>
+        /// Функция добавления продукта к заказу с подсчётом количества
+        /// </summary>
+        /// <param name="product"></param>
+        public void AddProductToOrderWithCounting(Product product)
+        {
+            Order order = MainWindow.db.Order.Where(ord => ord.OrderID == currentOrder.OrderID).FirstOrDefault();
+            OrderProduct copy = order.OrderProduct.Where(ord => ord.Product == product).FirstOrDefault();
+            if (copy != null)
+            {
+                copy.Count++;
+                MainWindow.db.SaveChanges();
+            }
+            else
+            {
+                OrderProduct orderProduct = new OrderProduct();
+                orderProduct.Product = product;
+                orderProduct.Order = MainWindow.db.Order.Where(orderthis => orderthis.OrderID == currentOrder.OrderID).FirstOrDefault();
+                orderProduct.Count = 1;
+                MainWindow.db.OrderProduct.Add(orderProduct);
+                MainWindow.db.SaveChanges();
+            }
+
+        }
+        /// <summary>
+        /// Функция обновления каталога с составом заказа
+        /// </summary>
+        public void UpdateOrderList()
+        {
+            decimal totalSum = 0;
+            decimal totalDiscountSum = 0;
+            foreach (var OrderProduct in MainWindow.db.Order.Where(order => order.OrderID == currentOrder.OrderID).FirstOrDefault().OrderProduct.ToList())
+            {
+                totalSum += OrderProduct.Product.ProductCost * OrderProduct.Count;
+                totalDiscountSum +=
+                    (decimal)(OrderProduct.Product.ProductCost * OrderProduct.Product.ProductDiscountAmount / 100 * OrderProduct.Count);
+            }
+
+            MainWindow.orderWindow.TotalDiscountTextBox.Text = "Общая скидка: $" + (totalDiscountSum);
+            MainWindow.orderWindow.TotalSumTextBox.Text = "Общая сумма: $" + (totalSum - totalDiscountSum);
+            MainWindow.orderWindow.OrderListView.ItemsSource = MainWindow.db.Order.Where(order => order.OrderID == currentOrder.OrderID).FirstOrDefault().OrderProduct.ToList();
+        }
+        /// <summary>
+        /// Функция добавления формируемого заказа
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AddToOrderClick(object sender, RoutedEventArgs e)
+        {
+            Product product = (sender as MenuItem).DataContext as Product;
+            if (!CurrentOrderExists)
+            {
+                AddCurrentOrderToDatabase();
+            }
+            AddProductToOrderWithCounting(product);
+            UpdateOrderList();
+            MessageBox.Show("К заказу был добавлен продукт");
+        }
+        /// <summary>
+        /// Функция добавления продукта к заказу
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AddToOrderBtnClick(object sender, RoutedEventArgs e)
+        {
+            Product product = (sender as Button).DataContext as Product;
+            if (!CurrentOrderExists)
+            {
+                AddCurrentOrderToDatabase();
+            }
+            AddProductToOrderWithCounting(product);
+            UpdateOrderList();
+            MessageBox.Show("К заказу был добавлен продукт");
         }
     }
 }

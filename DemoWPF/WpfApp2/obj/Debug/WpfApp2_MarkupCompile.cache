@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Demo1\DemoWPF\WpfApp2\obj\Debug\
+C:\Users\PC\Desktop\Demo1\DemoWPF\WpfApp2\obj\Debug\
 WpfApp2
 none
 false
 DEBUG;TRACE
-C:\Demo1\DemoWPF\WpfApp2\App.xaml
-59393116
+C:\Users\PC\Desktop\Demo1\DemoWPF\WpfApp2\App.xaml
+71056327428
 2-1957146511
-23-1273600023
-18-834407467
-AdminProductWindow.xaml;CaptchWind.xaml;ChangeProductWindow.xaml;MainWindow.xaml;ProductWindow.xaml;
+261642440839
+19649880894
+AddProductWindow.xaml;AdminWindow.xaml;CaptchaWindow.xaml;ChangeProductWindow.xaml;MainWindow.xaml;OrderWindow.xaml;ProductWindow.xaml;
 
-False
+True
 

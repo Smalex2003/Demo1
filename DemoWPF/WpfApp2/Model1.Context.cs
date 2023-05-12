@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ProductDEmo
+namespace WpfApp2
 {
     using System;
     using System.Data.Entity;
